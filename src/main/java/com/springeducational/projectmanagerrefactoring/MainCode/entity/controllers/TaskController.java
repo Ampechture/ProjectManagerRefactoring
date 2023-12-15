@@ -35,4 +35,20 @@ public class TaskController {
         model.addAttribute("newSubtask", new Subtask());
         return "index";
     }
+
+    @PostMapping("/addTask")
+    public String addTask(Task task) {
+        if (taskRepository.existsByprojectName(task.getProjectName())) {
+            return "WrongLoginData";
+        } else {
+            Long userId = userService.getUserId();
+            User user = userService.userFindById(userId);
+            task.setUsersIdentity(List.of(user));
+
+            taskRepository.save(task);
+
+
+            return "redirect:/";
+        }
+    }
 }
