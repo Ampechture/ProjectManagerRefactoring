@@ -64,4 +64,26 @@ public class TaskController1 {
         }
         return "redirect:/project/{projectId}";
     }
+
+    @PostMapping("/addSubtask/delete")
+    public void deleteTask(@PathVariable Task task) {
+        Optional<Task> taskOptional = taskRepository.findById(task.getId());
+        if (taskOptional.isPresent()) {
+            taskRepository.deleteById(task.getId());
+        }
+    }
+
+
+    @GetMapping("/project/{projectId}")
+    public String projectPage(@PathVariable Long projectId, Model model) {
+        Optional<Task> taskOptional = taskRepository.findById(projectId);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            model.addAttribute("task", task);
+            model.addAttribute("newSubtask", new Subtask());
+            return "project";
+        } else {
+            return "redirect:/";
+        }
+    }
 }
