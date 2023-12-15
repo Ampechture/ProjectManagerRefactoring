@@ -51,4 +51,53 @@ public class TaskController {
             return "redirect:/";
         }
     }
+
+
+    @PostMapping("/addSubtask/{projectId}")
+    public String addSubtask(@PathVariable Long projectId, Subtask subtask) {
+        Optional<Task> taskOptional = taskRepository.findById(projectId);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            subtask.setProject(task);
+            task.getSubtasks().add(subtask);
+            taskRepository.save(task);
+        }
+        return "redirect:/project/{projectId}";
+    }
+
+    @GetMapping("/project/{projectId}")
+    public String projectPage(@PathVariable Long projectId, Model model) {
+        Optional<Task> taskOptional = taskRepository.findById(projectId);
+        if (taskOptional.isPresent()) {
+            Task task = taskOptional.get();
+            model.addAttribute("task", task);
+            model.addAttribute("newSubtask", new Subtask());
+            return "project";
+        } else {
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/test/add")
+    public String addTest(Model model, projectId id){
+        Task task = new Task();
+        task.setProjectName("123");
+
+        model.addAttribute("projectId", id);
+        return "join";
+    }
+    @PostMapping("/test/add")
+    public String joinTask(projectId projectId){
+        Task task = taskRepository.findById(projectId.getId()).orElse(null);
+        Long userId = userService.getUserId();
+        User user = userService.userFindById(userId);
+        List<User> toAdd = task.getUsersIdentity();
+        toAdd.add(user);
+        task.setUsersIdentity(toAdd);
+        taskRepository.save(task);
+        return "redirect:/";
+
+
+    }
+
 }
