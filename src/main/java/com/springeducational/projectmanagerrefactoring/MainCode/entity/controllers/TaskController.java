@@ -86,4 +86,35 @@ public class TaskController1 {
             return "redirect:/";
         }
     }
+
+    @GetMapping("/test/add")
+    public String addTest(Model model, projectId id){
+        Task task = new Task();
+        task.setProjectName("123");
+
+
+        User user = new User();
+        user.setName("boba");
+        user.setEmail("boba1@mail.ru");
+        user.setPassword("1234");
+        user = userService.saveUser(user);
+        task.setUsersIdentity(List.of(user));
+        taskRepository.save(task);
+        model.addAttribute("projectId", id);
+        return "join";
+    }
+    @PostMapping("/test/add")
+    public String joinTask(projectId projectId){
+        Task task = taskRepository.findById(projectId.getId()).orElse(null);
+        Long userId = userService.getUserId();
+        User user = userService.userFindById(userId);
+        List<User> toAdd = task.getUsersIdentity();
+        toAdd.add(user);
+        task.setUsersIdentity(toAdd);
+        taskRepository.save(task);
+        return "redirect:/";
+
+
+    }
+
 }
