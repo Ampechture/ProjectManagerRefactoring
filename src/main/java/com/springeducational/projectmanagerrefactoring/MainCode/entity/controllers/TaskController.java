@@ -64,16 +64,7 @@ public class TaskController1 {
         }
         return "redirect:/project/{projectId}";
     }
-
-    @PostMapping("/addSubtask/delete")
-    public void deleteTask(@PathVariable Task task) {
-        Optional<Task> taskOptional = taskRepository.findById(task.getId());
-        if (taskOptional.isPresent()) {
-            taskRepository.deleteById(task.getId());
-        }
-    }
-
-
+    
     @GetMapping("/project/{projectId}")
     public String projectPage(@PathVariable Long projectId, Model model) {
         Optional<Task> taskOptional = taskRepository.findById(projectId);
@@ -86,4 +77,27 @@ public class TaskController1 {
             return "redirect:/";
         }
     }
+
+    @GetMapping("/test/add")
+    public String addTest(Model model, projectId id){
+        Task task = new Task();
+        task.setProjectName("123");
+        
+        model.addAttribute("projectId", id);
+        return "join";
+    }
+    @PostMapping("/test/add")
+    public String joinTask(projectId projectId){
+        Task task = taskRepository.findById(projectId.getId()).orElse(null);
+        Long userId = userService.getUserId();
+        User user = userService.userFindById(userId);
+        List<User> toAdd = task.getUsersIdentity();
+        toAdd.add(user);
+        task.setUsersIdentity(toAdd);
+        taskRepository.save(task);
+        return "redirect:/";
+
+
+    }
+
 }
