@@ -17,7 +17,7 @@ import java.util.Optional;
 
 
 @Controller
-public class TaskController1 {
+public class TaskController {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -65,15 +65,6 @@ public class TaskController1 {
         return "redirect:/project/{projectId}";
     }
 
-    @PostMapping("/addSubtask/delete")
-    public void deleteTask(@PathVariable Task task) {
-        Optional<Task> taskOptional = taskRepository.findById(task.getId());
-        if (taskOptional.isPresent()) {
-            taskRepository.deleteById(task.getId());
-        }
-    }
-
-
     @GetMapping("/project/{projectId}")
     public String projectPage(@PathVariable Long projectId, Model model) {
         Optional<Task> taskOptional = taskRepository.findById(projectId);
@@ -92,14 +83,6 @@ public class TaskController1 {
         Task task = new Task();
         task.setProjectName("123");
 
-
-        User user = new User();
-        user.setName("boba");
-        user.setEmail("boba1@mail.ru");
-        user.setPassword("1234");
-        user = userService.saveUser(user);
-        task.setUsersIdentity(List.of(user));
-        taskRepository.save(task);
         model.addAttribute("projectId", id);
         return "join";
     }
@@ -117,4 +100,3 @@ public class TaskController1 {
 
     }
 
-}
