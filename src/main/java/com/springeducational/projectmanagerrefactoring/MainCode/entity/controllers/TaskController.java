@@ -80,8 +80,6 @@ public class TaskController {
 
     @GetMapping("/test/add")
     public String addTest(Model model, projectId id){
-        Task task = new Task();
-        task.setProjectName("123");
 
         model.addAttribute("projectId", id);
         return "join";
